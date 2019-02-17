@@ -15,16 +15,17 @@ class AbstractFilterDataForTable extends Component {
   };
   */
 
-  constructor(numRows) {
-    super();
+  constructor(props, numRows) {
+    super(props);
     this.innerMeta = {};
     this.innerMeta.numRows = numRows;
     this.innerMeta.filter = {};
     this.innerMeta.endPointRequest = "unknown";
     this.innerMeta.typeRequest = "unknown";
     this.forbidenCallBack = () => {
-      localStorage.setItem("isAuth", "0");
-      this.setState({ forbidden: true, isOpenModal: true });
+      sessionStorage.setItem("isAuth", "0");
+      sessionStorage.setItem("role", "");
+      this.setState({ forbidden: true, isOpenModal: false, isLoad: false });
     };
     this.innerMeta.initMethod = () => {
       requestContent(
@@ -41,6 +42,10 @@ class AbstractFilterDataForTable extends Component {
       );
     };
   }
+
+  handleCloseSnackbar = () => {
+    this.setState({ isOpenSnackbar: false });    
+  };
 
   handleChangePage = (event, numRequirePage) => {
     if (this.state.isLoad) return;

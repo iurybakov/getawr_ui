@@ -24,6 +24,7 @@ import {
 } from "../../common/requests";
 import Fade from "@material-ui/core/Fade";
 import { Redirect } from "react-router-dom";
+import ModalInfo from "../../common/modal-info";
 
 const rowsPerPage = 10;
 
@@ -31,8 +32,7 @@ const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     width: "70%",
-    minWidth: 1200,
-    marginTop: theme.spacing.unit * 7
+    minWidth: 900
   },
   paperRoot: {
     padding: theme.spacing.unit * 3
@@ -86,12 +86,13 @@ class TableEditDB extends AbstractFilterDataForTable {
     },
     statusModal: "on open...",
     isEditModalType: false,
-    isOpenDeleteSnackbar: false,
-    deleteStatus: ""
+    isOpenSnackbar: false,
+    deleteStatus: "",
+    isntRedirect: true
   };
 
-  constructor() {
-    super(rowsPerPage);
+  constructor(props) {
+    super(props, rowsPerPage);    
     this.innerMeta.endPointRequest = "edit";
     this.innerMeta.typeRequest = "content";
     this.innerMeta.initMethod();
@@ -99,16 +100,17 @@ class TableEditDB extends AbstractFilterDataForTable {
     this.innerMeta.notEditingRow = {};
   }
 
-  handleCloseSnackbar = () => {
-    this.setState({ isOpenDeleteSnackbar: false });
-  };
-
   handleDeleteRows = () => {
     this.setState({ data: [], page: 0, isLoad: true, selected: [] });
-    requestDeleteContent(this.state.selected, resp => {
-      this.setState({ isOpenDeleteSnackbar: true, deleteStatus: resp.body });
-      this.refreshPage(0);
-    });
+    requestDeleteContent(
+      "edit",
+      this.state.selected,
+      resp => {
+        this.setState({ isOpenSnackbar: true, deleteStatus: resp.body });
+        if (resp.success === true) this.refreshPage(0);
+      },
+      this.forbidenCallBack
+    );
   };
 
   handleChangeRowModal = name => event => {
@@ -131,13 +133,19 @@ class TableEditDB extends AbstractFilterDataForTable {
       if (i === 0) return;
     }
     this.setState({ statusModal: "performing request, please wait" });
-    requestInsertOrUpdateCredential(type, rowDataModal, resp => {
-      if (this.state.statusModal === "performing request, please wait") {
-        this.setState({ statusModal: resp.body });
-        if (resp.body === "row updated successfully")
-          this.innerMeta.notEditingRow = { ...rowDataModal };
-      }
-    });
+    requestInsertOrUpdateCredential(
+      this.innerMeta.endPointRequest,
+      type,
+      rowDataModal,
+      resp => {
+        if (this.state.statusModal === "performing request, please wait") {
+          this.setState({ statusModal: resp.body });
+          if (resp.body === "row updated successfully")
+            this.innerMeta.notEditingRow = { ...rowDataModal };
+        }
+      },
+      this.forbidenCallBack
+    );
   };
 
   hadleClickModalRowOpen = (isEditModalType, rowData) => () => {
@@ -182,13 +190,17 @@ class TableEditDB extends AbstractFilterDataForTable {
     else this.setState({ selected: this.state.data.map(elem => elem.id) });
   };
 
+  hadleClickModalInfoClose = () => {
+    this.setState({ isntRedirect: false, forbidden: false });
+  };
+
   isSelected = id => this.state.selected.indexOf(id) !== -1;
   isAllSelected = () =>
     this.state.data.length !== 0 &&
     this.state.selected.length === this.state.data.length;
 
   render() {
-    const { 
+    const {
       forbidden,
       filterDraft,
       page,
@@ -201,13 +213,14 @@ class TableEditDB extends AbstractFilterDataForTable {
       rowDataModal,
       statusModal,
       isEditModalType,
-      isOpenDeleteSnackbar,
-      deleteStatus
-     } = this.state;
+      isOpenSnackbar,
+      deleteStatus,
+      isntRedirect
+    } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
     const { classes } = this.props;
-    if (!forbidden || isOpenModal)
+    if (isntRedirect)
       return (
         <div className={classes.root}>
           <Paper className={classes.paperRoot}>
@@ -314,9 +327,7 @@ class TableEditDB extends AbstractFilterDataForTable {
                             checked={this.isSelected(row.id)}
                           />
                           <IconButton
-                            disabled={
-                              selected.length > 0 ? true : false
-                            }
+                            disabled={selected.length > 0 ? true : false}
                             onClick={this.hadleClickModalRowOpen(true, row)}
                             aria-label="Edit"
                           >
@@ -365,9 +376,11 @@ class TableEditDB extends AbstractFilterDataForTable {
                       <TableCell colSpan={6}>
                         <Fade in={emptyRows === rowsPerPage}>
                           <Typography variant="h6" id="tableTitle">
-                            {isNotFound
+                            {isLoad
+                              ? "Loading..."
+                              : isNotFound
                               ? "Not found, please change filter"
-                              : "Loading..."}
+                              : ""}
                           </Typography>
                         </Fade>
                       </TableCell>
@@ -376,7 +389,7 @@ class TableEditDB extends AbstractFilterDataForTable {
                 </TableBody>
               </Table>
               <TablePagination
-                rowsPerPageOptions={[10]}
+                rowsPerPageOptions={[rowsPerPage]}
                 component="div"
                 count={numAllRows}
                 rowsPerPage={rowsPerPage}
@@ -389,7 +402,6 @@ class TableEditDB extends AbstractFilterDataForTable {
                 }}
                 onChangePage={this.handleChangePage}
               />
-
               <ModalRow
                 hadleClickModalRowClose={this.hadleClickModalRowClose}
                 hadleClickModalSubmit={this.hadleClickModalSubmit}
@@ -398,17 +410,23 @@ class TableEditDB extends AbstractFilterDataForTable {
                 open={isOpenModal}
                 values={rowDataModal}
                 statusModal={statusModal}
-                forbidden={forbidden}
+              />
+              <ModalInfo
+                open={forbidden}
+                hadleClickClose={this.hadleClickModalInfoClose}
+                title="Access forbidden..."
+                content="You were logged out, or session timed out. If you need to continue editing on this page, please login again"
+                route="/login"
+                routeButtonName="Login"
               />
             </Paper>
           </Paper>
-
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "left"
             }}
-            open={isOpenDeleteSnackbar}
+            open={isOpenSnackbar}
             autoHideDuration={6000}
             onClose={this.handleCloseSnackbar}
             ContentProps={{

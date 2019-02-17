@@ -67,13 +67,14 @@ class Login extends Component {
       if (resp.status !== 200)
         this.setState({ isLoad: false, isPermissionDenied: true });
       else {
-        localStorage.setItem("isAuth", "1");
+        sessionStorage.setItem("isAuth", "1");
+        sessionStorage.setItem("role", resp.headers.get("role"));
         this.setState({
           isLoad: false,
           isPermissionDenied: false,
           isntRedirect: false,
           loginForm: { user: "", pass: "" }
-        }); 
+        });
       }
     });
   };
@@ -105,7 +106,7 @@ class Login extends Component {
               </Typography>
               <div style={{ height: 15 }}>
                 <Fade in={isPermissionDenied}>
-                  <Typography variant="body1" color="primary">
+                  <Typography variant="caption" color="primary">
                     permision denied, please check entered data
                   </Typography>
                 </Fade>

@@ -25,7 +25,6 @@ const styles = theme => ({
   root: {
     width: 750,
     minWidth: 750,
-    marginTop: theme.spacing.unit * 7,
     padding: theme.spacing.unit * 3
   },
 
@@ -64,16 +63,16 @@ class Home extends Component {
     isOpenSnackbar: false,
     snackbarStatus: "",
     minIntervalDuration: null,
-    beginIntervalTime: new Date(), 
-    endIntervalTime: new Date(), 
-    selectedDateFrom: new Date(), 
-    selectedDateTo: new Date(), 
+    beginIntervalTime: new Date(),
+    endIntervalTime: new Date(),
+    selectedDateFrom: new Date(),
+    selectedDateTo: new Date(),
     isNotStatePicker: true,
     selectedRow: {}
   };
 
   handleCloseSnackbar = () => {
-    this.setState({ isOpenSnackbar: false, snackbarStatus: "" });
+    this.setState({ isOpenSnackbar: false });
   };
 
   handleGetPeriods = (isLoad, resp, selectedRow) => {
@@ -103,7 +102,7 @@ class Home extends Component {
         isLoad: false,
         dbId: data[0].dbId,
         minIntervalDuration:
-          (data[0].endIntervalTime - data[0].beginIntervalTime) + 500000,
+          data[0].endIntervalTime - data[0].beginIntervalTime + 500000,
         beginIntervalTime: new Date(data[0].beginIntervalTime - 600000),
         endIntervalTime: new Date(data[i].endIntervalTime + 600000),
         selectedDateFrom: new Date(data[i].beginIntervalTime),
@@ -119,41 +118,56 @@ class Home extends Component {
     const { selectedDateFrom, selectedDateTo, selectedRow } = this.state;
     const propsForGetAWR = {
       dbId: this.state.dbId,
-      dateFrom: selectedDateFrom.toISOString(),     
+      dateFrom: selectedDateFrom.toISOString(),
       dateTo: selectedDateTo.toISOString(),
-      tennantId: selectedRow.id
+      tennantId: selectedRow.id,
+      dbName: selectedRow.name
     };
-
-    
-    
+    const awrContent = window.open();
     requestContent("home", "awr", propsForGetAWR, resp => {
       this.setState({ isLoad: false, isNotStatePicker: false });
+      console.log(resp);
       if (!resp.success)
-        this.setState({ isOpenSnackbar: true, snackbarStatus: resp.body, });
-      const awrContent = window.open("about:blank", "awr report", "");
-      awrContent.document.write(resp.body);
-      resp.body = null;
+        this.setState({ isOpenSnackbar: true, snackbarStatus: resp.body });
+      else {
+        
+        awrContent.focus();        
+        awrContent.document.write(resp.body);
+        awrContent.document.execCommand("Stop", false);
+        awrContent.document.stop();
+        resp.body = null;
+      }
     });
   };
 
   handleDateChangeFrom = date => {
-    const {beginIntervalTime, minIntervalDuration, selectedDateTo} = this.state;
+    const {
+      beginIntervalTime,
+      minIntervalDuration,
+      selectedDateTo
+    } = this.state;
     if (date - beginIntervalTime < 0)
       this.setState({ selectedDateFrom: beginIntervalTime });
-    else if(selectedDateTo - date < minIntervalDuration)
-      this.setState({selectedDateFrom: new Date(+selectedDateTo - minIntervalDuration) })
-    else
-      this.setState({ selectedDateFrom: date });
+    else if (selectedDateTo - date < minIntervalDuration)
+      this.setState({
+        selectedDateFrom: new Date(+selectedDateTo - minIntervalDuration)
+      });
+    else this.setState({ selectedDateFrom: date });
   };
 
   handleDateChangeTo = date => {
-    const {endIntervalTime, minIntervalDuration, selectedDateFrom} = this.state;
+    const {
+      endIntervalTime,
+      minIntervalDuration,
+      selectedDateFrom
+    } = this.state;
     if (endIntervalTime - date < 0)
       this.setState({ selectedDateTo: endIntervalTime });
-    else if(date - selectedDateFrom < minIntervalDuration)
-      this.setState({selectedDateTo: new Date(+selectedDateFrom + minIntervalDuration) })
-    else
-      this.setState({ selectedDateTo: date });
+    else if (date - selectedDateFrom < minIntervalDuration)
+      this.setState({
+        selectedDateTo: new Date(+selectedDateFrom + minIntervalDuration)
+      });
+    else this.setState({ selectedDateTo: date });
   };
 
   render() {
@@ -187,7 +201,11 @@ class Home extends Component {
                 <div style={{ height: 10 }}>
                   <Fade in={!isNotStatePicker}>
                     <Typography variant="body1" color="inherit">
-                      For DB: {selectedRow.name}, awr interval about {parseInt((this.state.minIntervalDuration - 500000) / 60000)} minuts
+                      For DB: {selectedRow.name}, awr interval about{" "}
+                      {parseInt(
+                        (this.state.minIntervalDuration - 500000) / 60000
+                      )}{" "}
+                      minuts
                     </Typography>
                   </Fade>
                 </div>
@@ -255,7 +273,6 @@ class Home extends Component {
                     </Grid>
                   </Grid>
                   <Grid container spacing={0}>
-                    {/*TODO, I think here is necessary to add more functionality, it can be a new time period to compare the awr*/}
                     <Grid item className={classes.gridButtons} xs={12}>
                       <Button
                         disabled={isNotStatePicker}

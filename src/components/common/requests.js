@@ -10,24 +10,24 @@ export function requestContent(path, type, filter, isAuthCallBack, forbidenCallB
   request(path, type, body, isAuthCallBack, forbidenCallBack);
 };
 
-export function requestDeleteContent(credentialId, isAuthCallBack, forbidenCallBack) {
+export function requestDeleteContent(path, credentialId, isAuthCallBack, forbidenCallBack) {
   credentialId = credentialId.map(val => parseInt(val, 10));
 
   const body = {
     integerList: credentialId,
     data: null
   };
-  request("edit", "delete", body, isAuthCallBack, forbidenCallBack);
+  request(path, "delete", body, isAuthCallBack, forbidenCallBack);
 };
 
-export function requestInsertOrUpdateCredential(type, credential, isAuthCallBack, forbidenCallBack) {
+export function requestInsertOrUpdateCredential(path, type, credential, isAuthCallBack, forbidenCallBack) {
   for (const key in credential) credential[key] += "";
 
   const body = {
     integerList: null,
     data: { credential: credential }
   };
-  request("edit", type, body, isAuthCallBack, forbidenCallBack);
+  request(path, type, body, isAuthCallBack, forbidenCallBack);
 };
 
 export function requestPeriods(credentialId, callBack) {

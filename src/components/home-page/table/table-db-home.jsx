@@ -61,8 +61,8 @@ class TableHomeDB extends AbstractFilterDataForTable {
     isNotFound: false
   };
 
-  constructor() {
-    super(rowsPerPage);
+  constructor(props) {
+    super(props, rowsPerPage);
     this.innerMeta.endPointRequest = "home";
     this.innerMeta.typeRequest = "content";
     this.innerMeta.initMethod();
@@ -71,7 +71,7 @@ class TableHomeDB extends AbstractFilterDataForTable {
   }
 
   handleClickRow = row => () => {
-    if(this.state.isLoad) return;
+    if (this.state.isLoad) return;
     this.setState({ selectedRow: row });
     this.props.handleGetPeriods(true);
     requestPeriods(row.id, resp => {
@@ -82,7 +82,14 @@ class TableHomeDB extends AbstractFilterDataForTable {
   isSelectedRow = id => id === this.state.selectedRow.id;
 
   render() {
-    const { page, numAllRows, data, isLoad, filterDraft, isNotFound } = this.state;
+    const {
+      page,
+      numAllRows,
+      data,
+      isLoad,
+      filterDraft,
+      isNotFound
+    } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
     const { classes } = this.props;
@@ -190,9 +197,11 @@ class TableHomeDB extends AbstractFilterDataForTable {
                 <TableCell colSpan={3}>
                   <Fade in={emptyRows === rowsPerPage}>
                     <Typography variant="h6" id="tableTitle">
-                      {isNotFound
+                      {isLoad
+                        ? "Loading..."
+                        : isNotFound
                         ? "Not found, please change filter"
-                        : "Loading..."}
+                        : ""}
                     </Typography>
                   </Fade>
                 </TableCell>

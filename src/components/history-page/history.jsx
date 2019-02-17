@@ -13,7 +13,6 @@ const styles = theme => ({
   root: {
     width: 650,
     minWidth: 650,
-    marginTop: theme.spacing.unit * 7,
     padding: theme.spacing.unit * 3
   },
   paperRoot: {
@@ -29,15 +28,21 @@ const styles = theme => ({
 
 class HistoryAwrGetting extends Component {
   state = {
-    selectedIndex: -1
+    selectedIndex: -1,
+    data: []
   };
 
-  handleListItemClick = (event, index) => {
+  constructor(props) {
+    super(props);
+  }
+
+  handleListItemClick = index => event => {
     this.setState({ selectedIndex: index });
   };
 
   render() {
     const { classes } = this.props;
+    const { data } = this.state;
     return (
       <React.Fragment>
         <AppBarAwr />
@@ -53,22 +58,25 @@ class HistoryAwrGetting extends Component {
                 }
                 className={classes.list}
               >
-                <ListItem
-                  button
-                  selected={this.state.selectedIndex === 0}
-                  onClick={event => this.handleListItemClick(event, 0)}
-                >
-                  <ListItemIcon />
-                  <ListItemText inset primary="An example entry" />
-                </ListItem>
-                <ListItem
-                  button
-                  selected={this.state.selectedIndex === 1}
-                  onClick={event => this.handleListItemClick(event, 1)}
-                >
-                  <ListItemIcon />
-                  <ListItemText inset primary="An example entry" />
-                </ListItem>
+                {data.map((row, index) => (
+                  <ListItem
+                    button
+                    selected={this.state.selectedIndex === index}
+                    onClick={this.handleListItemClick(index)}
+                  >
+                    <ListItemIcon />
+                    <ListItemText
+                      inset
+                      primary={
+                        row.nameOraDb +
+                        ": " +
+                        row.beginIntervalTime +
+                        " - " +
+                        row.endIntervalTime
+                      }
+                    />
+                  </ListItem>
+                ))}
               </List>
             </Paper>
           </Paper>

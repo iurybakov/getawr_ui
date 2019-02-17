@@ -5,8 +5,12 @@ import Home from "./components/home-page/home";
 import EditListDb from "./components/edit-list-db-page/edit-list-db";
 import Login from "./components/login-page/login";
 import HistoryAwrGetting from "./components/history-page/history"
+import Admin from "./components/admin-page/admin";
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: {
       light: '#f80000',
@@ -30,6 +34,7 @@ class App extends Component {
         <Route exact path="/" component={Home}/>
         <Route exact path="/history" component={HistoryAwrGetting}/>
         <Route exact path="/edit-list-db" component={EditListDb}/>
+        <Route exact path="/admin" component={Admin} /> 
         <Route exact path="/login" component={Login} />       
       </MuiThemeProvider>
     );
