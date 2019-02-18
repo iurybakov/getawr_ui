@@ -32,7 +32,7 @@ const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     width: "70%",
-    minWidth: 900
+    minWidth: 1050
   },
   paperRoot: {
     padding: theme.spacing.unit * 3

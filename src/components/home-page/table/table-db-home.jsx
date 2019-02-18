@@ -74,7 +74,7 @@ class TableHomeDB extends AbstractFilterDataForTable {
     if (this.state.isLoad) return;
     this.setState({ selectedRow: row });
     this.props.handleGetPeriods(true);
-    requestPeriods(row.id, resp => {
+    requestPeriods("home", "periods", row.id, resp => {
       this.props.handleGetPeriods(false, resp, row);
     });
   };

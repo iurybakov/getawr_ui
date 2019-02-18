@@ -62,7 +62,7 @@ class AppBarAwr extends Component {
     const { isLogged, isSuggestModalOpen, isntAdmin } = this.state;
 
     return (
-      <AppBar position="static" style={{ minWidth: 950 }}>
+      <AppBar position="static" style={{ minWidth: 1100 }}>
         <Toolbar>
           <Typography variant="h6" color="inherit">
             Get Oracle AWR
@@ -73,7 +73,7 @@ class AppBarAwr extends Component {
             to="/"
             color="inherit"
           >
-            home
+            Home
           </Button>
           <Button
             className={classes.navButton}
@@ -83,7 +83,6 @@ class AppBarAwr extends Component {
           >
             History
           </Button>
-
           {isLogged ? (
             <React.Fragment>
               <Button
@@ -95,7 +94,7 @@ class AppBarAwr extends Component {
                 Edit list DB
               </Button>
               <Tooltip
-                placement={"top"}
+                placement="bottom"
                 title={
                   isntAdmin
                     ? "If you want to edit list of users, please login with ADMIN role"
@@ -103,15 +102,22 @@ class AppBarAwr extends Component {
                 }
               >
                 <Button
-                  disabled={isntAdmin}
                   className={classes.navButton}
-                  component={RouteLink}
+                  component={isntAdmin ? Button : RouteLink}
                   to="/admin"
                   color="inherit"
                 >
                   Edit list users
                 </Button>
               </Tooltip>
+              <Button
+                className={classes.navButton}
+                component={RouteLink}
+                to="/about"
+                color="inherit"
+              >
+                About
+              </Button>
               <Button
                 className={classes.loginButton}
                 onClick={this.handleLogout}
@@ -128,6 +134,14 @@ class AppBarAwr extends Component {
                 color="inherit"
               >
                 Edit list DB
+              </Button>
+              <Button
+                className={classes.navButton}
+                component={RouteLink}
+                to="/about"
+                color="inherit"
+              >
+                About
               </Button>
               <Button
                 className={classes.loginButton}

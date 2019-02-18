@@ -122,19 +122,17 @@ class Home extends Component {
       dateTo: selectedDateTo.toISOString(),
       tennantId: selectedRow.id,
       dbName: selectedRow.name
-    };
-    const awrContent = window.open();
+    };    
     requestContent("home", "awr", propsForGetAWR, resp => {
-      this.setState({ isLoad: false, isNotStatePicker: false });
-      console.log(resp);
+      this.setState({ isLoad: false, isNotStatePicker: false });      
       if (!resp.success)
         this.setState({ isOpenSnackbar: true, snackbarStatus: resp.body });
       else {
-        
+        const awrContent = window.open();
         awrContent.focus();        
         awrContent.document.write(resp.body);
         awrContent.document.execCommand("Stop", false);
-        awrContent.document.stop();
+        awrContent.document.close();
         resp.body = null;
       }
     });

@@ -10,7 +10,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import Fade from "@material-ui/core/Fade";
 
-
 class ModalRow extends Component {
   render() {
     return (
@@ -22,6 +21,7 @@ class ModalRow extends Component {
           aria-labelledby="form-dialog-title"
         >
           <form
+            style={{ padding: 30 }}
             autocomplete="off"
             action="#"
             onSubmit={this.props.hadleClickModalSubmit}
@@ -31,7 +31,11 @@ class ModalRow extends Component {
                 You can {this.props.isEditModalType ? "edit" : "add"} info about
                 Oracle DB connection
               </Typography>
-              <Fade in={this.props.statusModal === "performing request, please wait"}>
+              <Fade
+                in={
+                  this.props.statusModal === "performing request, please wait"
+                }
+              >
                 <CircularProgress
                   variant="indeterminate"
                   disableShrink
@@ -119,14 +123,14 @@ class ModalRow extends Component {
                 variant="inherit"
               >
                 status: {this.props.statusModal}
-              </Typography>              
+              </Typography>
             </div>
             <DialogActions>
               <Button
                 onClick={this.props.hadleClickModalRowClose}
                 color="primary"
               >
-                Cancel
+                Close
               </Button>
               <Button
                 disabled={

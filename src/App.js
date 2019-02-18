@@ -6,6 +6,7 @@ import EditListDb from "./components/edit-list-db-page/edit-list-db";
 import Login from "./components/login-page/login";
 import HistoryAwrGetting from "./components/history-page/history"
 import Admin from "./components/admin-page/admin";
+import About from "./components/about-page/about";
 
 const theme = createMuiTheme({
   typography: {
@@ -33,6 +34,7 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>      
         <Route exact path="/" component={Home}/>
         <Route exact path="/history" component={HistoryAwrGetting}/>
+        <Route exact path="/about" component={About}/>
         <Route exact path="/edit-list-db" component={EditListDb}/>
         <Route exact path="/admin" component={Admin} /> 
         <Route exact path="/login" component={Login} />       

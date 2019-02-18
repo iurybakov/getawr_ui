@@ -10,6 +10,7 @@ export function requestContent(path, type, filter, isAuthCallBack, forbidenCallB
   request(path, type, body, isAuthCallBack, forbidenCallBack);
 };
 
+
 export function requestDeleteContent(path, credentialId, isAuthCallBack, forbidenCallBack) {
   credentialId = credentialId.map(val => parseInt(val, 10));
 
@@ -19,6 +20,7 @@ export function requestDeleteContent(path, credentialId, isAuthCallBack, forbide
   };
   request(path, "delete", body, isAuthCallBack, forbidenCallBack);
 };
+
 
 export function requestInsertOrUpdateCredential(path, type, credential, isAuthCallBack, forbidenCallBack) {
   for (const key in credential) credential[key] += "";
@@ -30,14 +32,16 @@ export function requestInsertOrUpdateCredential(path, type, credential, isAuthCa
   request(path, type, body, isAuthCallBack, forbidenCallBack);
 };
 
-export function requestPeriods(credentialId, callBack) {
+
+export function requestPeriods(path, type, credentialId, callBack) {
 
   const body = {
     integerList: [credentialId],
     data: null
   };
-  request("home", "periods", body, callBack);
+  request(path, type, body, callBack);
 };
+
 
 export function loginRequest(user, pass, callBack) {
 
@@ -46,12 +50,14 @@ export function loginRequest(user, pass, callBack) {
   }).then(callBack);
 };
 
+
 export function logoutRequest(callBack) {
 
   fetch("/getawr/rest/edit/out", {
     method: "post",   
   }).then(callBack);
 };
+
 
 function request(path, type, body, isAuthCallBack, forbidenCallBack) {
   fetch("/getawr/rest/" + path, {
@@ -70,18 +76,3 @@ function request(path, type, body, isAuthCallBack, forbidenCallBack) {
       forbidenCallBack(response);    
   });
 };
-
-// function requestPublic(path, type, body, callBack) {
-//   fetch("/getawr/rest/" + path, {
-//     method: "post",
-//     headers: new Headers({ "content-type": "application/json;charset=UTF-8" }),
-//     body: JSON.stringify({
-//       id: uuidv1().toString(),
-//       time: Date.UTC(),
-//       type: type,
-//       body: { ...body }
-//     })
-//   }).then(function(response) {
-//     response.json().then(callBack);
-//   });
-// };

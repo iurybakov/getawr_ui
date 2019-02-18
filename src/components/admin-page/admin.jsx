@@ -26,6 +26,7 @@ import AbstractFilterDataForTable from "../common/abstract-filtered-data";
 import ModalInfo from "../common/modal-info";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import ModalConfirm from "../common/modal-confirm";
 
 const rowsPerPage = 7;
 
@@ -75,24 +76,26 @@ class Admin extends AbstractFilterDataForTable {
       page: 0,
       isLoad: true,
       forbidden: false,
-      row: { user: "", pass: "", role: "" },
+      row: { user: "", pass: "", role: "ROLE_USER" },
       isOpenSnackbar: false,
       messageSnackbar: "",
-      isntRedirect: true
+      isntRedirect: true,
+      isOpenConfirmModal: false
     };
 
     this.innerMeta.endPointRequest = "edit/admin";
     this.innerMeta.typeRequest = "content";
     this.innerMeta.initMethod();
     this.innerMeta.initMethod = null;
-  }
+    this.innerMeta.forOperateRow = null;
+  };
 
   inserOrUpdateCallback = resp => {
     if (resp.success === true)
       this.setState({
         data: resp.body.data,
         isLoad: false,
-        numAllRows: resp.body.properties.allRows,        
+        numAllRows: resp.body.properties.allRows
       });
     else
       this.setState({
@@ -103,7 +106,17 @@ class Admin extends AbstractFilterDataForTable {
   };
 
   handleOperateRow = (id, action) => () => {
-    this.setState({ isLoad: true });
+    this.setState({ isLoad: true, isOpenConfirmModal: true });
+    this.innerMeta.forOperateRow = {id: id, action: action};
+  };
+
+  hadleClickCloseConfirmModal = () => {
+    this.setState({isLoad: false, isOpenConfirmModal: false});
+  };
+
+  hadleClickSubmitConfirmModal = () => {
+    this.setState({isOpenConfirmModal: false});
+    const {id, action} = this.innerMeta.forOperateRow;
     requestInsertOrUpdateCredential(
       "edit/admin",
       "operate",
@@ -135,6 +148,7 @@ class Admin extends AbstractFilterDataForTable {
       this.inserOrUpdateCallback,
       this.forbidenCallBack
     );
+    this.setState({row: { user: "", pass: "", role: "" }});
   };
 
   handleChangeRow = name => event => {
@@ -150,7 +164,7 @@ class Admin extends AbstractFilterDataForTable {
       page: 0,
       isLoad: true,
       forbidden: false,
-      row: { user: "", pass: "", role: "" },
+      row: { user: "", pass: "", role: "ROLE_USER" },
       isOpenSnackbar: false,
       messageSnackbar: "",
       isntRedirect: false
@@ -168,7 +182,8 @@ class Admin extends AbstractFilterDataForTable {
       row,
       isOpenSnackbar,
       messageSnackbar,
-      isntRedirect
+      isntRedirect,
+      isOpenConfirmModal
     } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
@@ -349,6 +364,12 @@ class Admin extends AbstractFilterDataForTable {
             content="You were logged out, or session timed out. If you need to continue editing on this page, please login again"
             route="/login"
             routeButtonName="Login"
+          />
+          <ModalConfirm 
+            open={isOpenConfirmModal}
+            content="Are you sure you want to perform this operation?"
+            hadleClickCloseConfirmModal={this.hadleClickCloseConfirmModal}
+            hadleClickSubmitConfirmModal={this.hadleClickSubmitConfirmModal}
           />
           <Snackbar
             anchorOrigin={{
