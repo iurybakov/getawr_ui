@@ -237,7 +237,7 @@ class Admin extends AbstractFilterDataForTable {
                     {data.map(row => {
                       return (
                         <TableRow className={classes.tableRow} key={row.id}>
-                          <TableCell padding="dense">{row.username}</TableCell>
+                          <TableCell style={{wordBreak:"break-all"}} padding="dense">{row.username}</TableCell>
                           <TableCell padding="dense" align="left">
                             {row.role}
                           </TableCell>

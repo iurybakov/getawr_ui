@@ -37,10 +37,12 @@ const styles = {
     marginLeft: 10
   },
   tableCellName: {
+    wordBreak:"break-all",
     minWidth: "45%",
     width: "45%"
   },
   tableCellOther: {
+    wordBreak:"break-all",
     minWidth: "34%",
     width: "34%"
   },

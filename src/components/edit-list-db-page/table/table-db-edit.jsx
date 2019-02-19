@@ -41,7 +41,7 @@ const styles = theme => ({
     overflowX: "auto"
   },
   tableCellName: {
-    wordWrap: "break-word",
+    wordBreak:"break-all",
     width: "20%",
     minWidth: "20%"
   },
@@ -50,12 +50,12 @@ const styles = theme => ({
     minWidth: "10%"
   },
   tableCellOther: {
-    wordWrap: "break-word",
+    wordBreak:"break-all",
     minWidth: "20%",
     width: "20%"
   },
   tableCellPortSid: {
-    wordWrap: "break-word",
+    wordBreak:"break-all",
     minWidth: "15%",
     width: "15%"
   },
@@ -92,7 +92,7 @@ class TableEditDB extends AbstractFilterDataForTable {
   };
 
   constructor(props) {
-    super(props, rowsPerPage);    
+    super(props, rowsPerPage);
     this.innerMeta.endPointRequest = "edit";
     this.innerMeta.typeRequest = "content";
     this.innerMeta.initMethod();
@@ -236,10 +236,7 @@ class TableEditDB extends AbstractFilterDataForTable {
               <Table>
                 <TableHead>
                   <TableRow className={classes.tableRow}>
-                    <TableCell
-                      padding="none"
-                      className={classes.tableCellButton}
-                    >
+                    <TableCell padding="none">
                       <Checkbox
                         onChange={this.handleCheckBoxAllRow}
                         checked={this.isAllSelected()}
@@ -323,10 +320,12 @@ class TableEditDB extends AbstractFilterDataForTable {
                       <TableRow className={classes.tableRow} key={row.id}>
                         <TableCell align="left" padding="none">
                           <Checkbox
+                            inline
                             onChange={this.handleCheckBoxRow(row.id)}
                             checked={this.isSelected(row.id)}
                           />
                           <IconButton
+                            inline
                             disabled={selected.length > 0 ? true : false}
                             onClick={this.hadleClickModalRowOpen(true, row)}
                             aria-label="Edit"
