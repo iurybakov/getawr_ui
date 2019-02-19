@@ -135,9 +135,9 @@ class HistoryAwrGetting extends Component {
                       inset
                       primary={row.nameOraDb}
                       secondary={
-                        new Date(row.beginIntervalTime).toUTCString() +
+                        new Date(row.beginIntervalTime).toLocaleString() +
                         " - " +
-                        new Date(row.endIntervalTime).toUTCString()
+                        new Date(row.endIntervalTime).toLocaleString()
                       }
                     />
                   </ListItem>
