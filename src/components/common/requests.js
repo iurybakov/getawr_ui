@@ -65,7 +65,7 @@ function request(path, type, body, isAuthCallBack, forbidenCallBack) {
     headers: new Headers({ "content-type": "application/json;charset=UTF-8" }),
     body: JSON.stringify({
       id: uuidv1().toString(),
-      time: Date.UTC(),
+      time: Date.now(),
       type: type,
       body: { ...body }
     })
