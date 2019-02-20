@@ -23,8 +23,8 @@ import { requestPeriods } from "../../common/requests";
 const rowsPerPage = 5;
 
 const styles = {
-  table: {
-    minWidth: 600
+  paperTable: {
+    overflowX: "auto"
   },
   tableCellButton: {
     width: 98,
@@ -38,13 +38,15 @@ const styles = {
   },
   tableCellName: {
     wordBreak:"break-all",
-    minWidth: "45%",
-    width: "45%"
+    width: "40%"
   },
-  tableCellOther: {
+  tableCellOS: {
     wordBreak:"break-all",
-    minWidth: "34%",
-    width: "34%"
+    width: "35%"
+  },
+  tableCellVersion: {
+    wordBreak:"break-all",
+    width: "25%"
   },
   spiner: {
     color: "#6798e5",
@@ -97,7 +99,7 @@ class TableHomeDB extends AbstractFilterDataForTable {
     const { classes } = this.props;
 
     return (
-      <Paper>
+      <Paper className={classes.paperTable}>
         <Toolbar>
           <Typography variant="h6" id="tableTitle">
             Please select database
@@ -158,7 +160,7 @@ class TableHomeDB extends AbstractFilterDataForTable {
                   variant="outlined"
                 />
               </TableCell>
-              <TableCell className={classes.tableCellOther} align="left">
+              <TableCell className={classes.tableCellOS} align="left">
                 <TextField
                   id="outlined-os"
                   label={"OS"}
@@ -168,7 +170,7 @@ class TableHomeDB extends AbstractFilterDataForTable {
                   variant="outlined"
                 />
               </TableCell>
-              <TableCell className={classes.tableCellOther} align="left">
+              <TableCell className={classes.tableCellVersion} align="left">
                 <TextField
                   id="outlined-version"
                   label={"Version"}
@@ -190,8 +192,8 @@ class TableHomeDB extends AbstractFilterDataForTable {
                 key={row.id}
               >
                 <TableCell className={classes.tableCellName}>{row.name}</TableCell>
-                <TableCell className={classes.tableCellOther}>{row.os}</TableCell>
-                <TableCell className={classes.tableCellOther}>{row.version}</TableCell>
+                <TableCell className={classes.tableCellOS}>{row.os}</TableCell>
+                <TableCell className={classes.tableCellVersion}>{row.version}</TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

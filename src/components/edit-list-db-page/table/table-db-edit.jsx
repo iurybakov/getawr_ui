@@ -42,21 +42,17 @@ const styles = theme => ({
   },
   tableCellName: {
     wordBreak:"break-all",
-    width: "20%",
-    minWidth: "20%"
+    width: "20%"
   },
   tableCellButton: {
-    width: "10%",
-    minWidth: "10%"
+    width: "10%"
   },
   tableCellOther: {
     wordBreak:"break-all",
-    minWidth: "20%",
     width: "20%"
   },
   tableCellPortSid: {
     wordBreak:"break-all",
-    minWidth: "15%",
     width: "15%"
   },
   snackbar: {

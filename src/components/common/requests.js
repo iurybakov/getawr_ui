@@ -1,4 +1,7 @@
 import uuidv1 from "uuid/v1";
+import "es6-promise/auto";
+import "isomorphic-fetch";
+
 
 export function requestContent(path, type, filter, isAuthCallBack, forbidenCallBack) {
   for (const key in filter) filter[key] += "";
