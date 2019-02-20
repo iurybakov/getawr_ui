@@ -189,9 +189,9 @@ class TableHomeDB extends AbstractFilterDataForTable {
                 className={classes.tableRow}
                 key={row.id}
               >
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.os}</TableCell>
-                <TableCell>{row.version}</TableCell>
+                <TableCell className={classes.tableCellName}>{row.name}</TableCell>
+                <TableCell className={classes.tableCellOther}>{row.os}</TableCell>
+                <TableCell className={classes.tableCellOther}>{row.version}</TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (
